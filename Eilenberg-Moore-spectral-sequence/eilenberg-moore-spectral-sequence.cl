@@ -1,11 +1,13 @@
-;;;  FIBER-SPACE-EFHM  FIBER-SPACE-EFHM  FIBER-SPACE-EFHM  FIBER-SPACE-EFHM
-;;;  FIBER-SPACE-EFHM  FIBER-SPACE-EFHM  FIBER-SPACE-EFHM  FIBER-SPACE-EFHM
-;;;  FIBER-SPACE-EFHM  FIBER-SPACE-EFHM  FIBER-SPACE-EFHM  FIBER-SPACE-EFHM
+;;;  EILENBERG-MOORE-SPECTRAL-SEQUENCE  EILENBERG-MOORE-SPECTRAL-SEQUENCE  EILENBERG-MOORE-SPECTRAL-SEQUENCE  EILENBERG-MOORE-SPECTRAL-SEQUENCE
+;;;  EILENBERG-MOORE-SPECTRAL-SEQUENCE  EILENBERG-MOORE-SPECTRAL-SEQUENCE  EILENBERG-MOORE-SPECTRAL-SEQUENCE  EILENBERG-MOORE-SPECTRAL-SEQUENCE
+;;;  EILENBERG-MOORE-SPECTRAL-SEQUENCE  EILENBERG-MOORE-SPECTRAL-SEQUENCE  EILENBERG-MOORE-SPECTRAL-SEQUENCE  EILENBERG-MOORE-SPECTRAL-SEQUENCE
 
 (IN-PACKAGE #:cat)
 
-(PROVIDE "fiber-space-efhm")
+(PROVIDE "EILENBERG-MOORE-SPECTRAL-SEQUENCE")
 
+
+;; Function computing the (non twisted) tensor product Cobar^C_*(B)(Z,Z) \otimes C_*(F)\otimes C_*(B)
 (DEFUN FIBER-HAT-U-U (fibration
                       &aux (space (sorc fibration))
                       (fiber (trgt fibration))
@@ -19,6 +21,8 @@
   (the chain-complex
     (tnsr-prdc cobar spac-tnsr-fiber)))
 
+
+;; Function computing the internal definition of the perturbation of Cobar^C_*(B)(Z,Z) \otimes C_*(F)\otimes_t C_*(B)
 (DEFUN FIBER-HAT-LEFT-PERTURBATION-INTR (fibration &aux (space (sorc fibration)))
   (declare 
    (type fibration fibration)
@@ -53,6 +57,8 @@
                                     cprd)))))))
       (the intr-mrph #'rslt))))
 
+
+;; Function computing the perturbation of Cobar^C_*(B)(Z,Z) \otimes C_*(F)\otimes_t C_*(B)
 (DEFUN FIBER-HAT-LEFT-PERTURBATION (fibration)
   (declare (type fibration fibration))
   (the morphism
@@ -66,6 +72,8 @@
        :strt :gnrt
        :orgn `(fiber-hat-left-perturbation ,fibration)))))
 
+
+;; Function computing the perturbed chain complex Cobar^C_*(B)(Z,Z) \otimes C_*(F)\otimes_t C_*(B)
 (DEFUN FIBER-HAT-T-U (fibration
                       &aux 
                       (fiber-hat-u-u (fiber-hat-u-u fibration))
@@ -116,6 +124,7 @@
   (the chain-complex
     (bcc szczarba)))
 
+
 (DEFUN FIBER-HAT-RIGHT-PERTURBATION (fibration
                                      &aux (space (sorc fibration))
                                      (cobar (cobar space))
@@ -135,6 +144,7 @@
         (setf (slot-value rslt 'sorc) fiber-hat-t-u
           (slot-value rslt 'trgt) fiber-hat-t-u)
         rslt))))
+
 
 (DEFUN FIBER-HAT-U-T (fibration
                       &aux (space (sorc fibration))
@@ -165,8 +175,6 @@
     (add fiber-hat-u-t fiber-hat-left-perturbation)))
 
 
-
-
 (DEFUN FIBER-PRE-LEFT-HMEQ-LEFT-REDUCTION-F (fibration
                                              &aux 
                                              (fiber-hat-t-u (fiber-hat-t-u fibration))
@@ -183,6 +191,7 @@
      :intr #'fiber-pre-left-hmeq-left-reduction-intr-f
      :strt :cmbn
      :orgn `(fiber-pre-left-hmeq-left-reduction-f ,fibration))))
+
 
 (DEFUN FIBER-LEFT-HMEQ-LEFT-REDUCTION-G-INTR (bbspn fbspn)
   (declare (type gmsm bbspn fbspn))
@@ -208,8 +217,7 @@
                                          (fiber (trgt fibration))
                                          (bbspn (bspn space))
                                          (fbspn (bspn fiber))
-                                         (fiber-hat-t-u (fiber-hat-t-u fibration))
-                                         )
+                                         (fiber-hat-t-u (fiber-hat-t-u fibration)))
   (declare
    (type fibration fibration)
    (type simplicial-set space fiber)
@@ -311,15 +319,16 @@
             (slot-value h 'trgt) tcc)
           rslt)))))
 
-
-
+;; Function computing the bicomplex Cobar
 (DEFUN EILENBERG-MOORE-BICOMPLEX (fibration)
   (declare (type fibration fibration))
   (let ((rslt (fiber-left-hmeq-hat fibration)))
-    (setf (slot-value rslt 'orgn) `(EILENBERG-MOORE-BICOMPLEX ,fibration))
+    (setf (slot-value rslt 'orgn) `(Eilenberg-Moore-bicomplex ,fibration))
     rslt))
 
 
+;; Function computing the fibration associated to the loop space of space
+;;; (with contractible total space)
 (DEFUN LOOP-FBR (space)
   (declare (type simplicial-set space))
   (build-smmr
@@ -361,7 +370,6 @@
        fiber-hat-left-perturbation))))
 
 
-
 (DEFVAR fib-cobar-flin)
 (setf fib-cobar-flin 
   #'(lambda (degr tnpr)
@@ -371,6 +379,7 @@
         (with-allp (l) allp
           (the fixnum
             (- (length l)))))))
+
 
 (defun allp-bidegree (allp)
   (declare (type allp allp))
@@ -382,15 +391,8 @@
       (incf q p)
       (return-from allp-bidegree (list (- p) q)))))
 
-(DEFVAR cobar-flin)
-(setf cobar-flin 
-  #'(lambda (degr allp)
-      (declare (ignore degr)
-               (type allp allp))
-      (with-allp (l) allp
-        (the fixnum
-          (- (length l))))))
 
+(DEFVAR cobar-flin)
 
 (setf cobar-flin 
   #'(lambda (degr allp)
@@ -402,9 +404,6 @@
         (if (=  degr (+ degr1 degr2))
             degr1
           0))))
-
-
-
 
 
 ;; Function that constructs the Eilenberg-Moore spectral sequence associated with a fibration

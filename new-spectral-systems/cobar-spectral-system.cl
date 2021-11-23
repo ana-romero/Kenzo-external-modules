@@ -75,7 +75,7 @@
     (progn
       (setf k (change-chcm-to-gflcc k (dz2) tnpr-cobar-gflin '(tnpr-cobar-gflin)))
       (setf ecc (change-chcm-to-gflcc ecc (dz2) tnpr-cobar-gflin '(tnpr-cobar-gflin)))
-      (the spectral-system
+      (the SPECTRAL-SYSTEM
         (build-spectral-system ecc `(cobar-spectral-system ,fibration))))))  
 
 

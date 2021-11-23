@@ -1,7 +1,7 @@
 ;;; 
 (load "Kenzo-external-modules\\Eilenberg-Moore-spectral-sequence\\central-extensions")
-(load "Kenzo-external-modules\\Eilenberg-Moore-spectral-sequence\\eilenberg-moore-spectral-sequence-auxfunctions")
-(load "Kenzo-external-modules\\Eilenberg-Moore-spectral-sequence\\eilenberg-moore-spectral-sequence")
+(load "Kenzo-external-modules\\Eilenberg-Moore-spectral-sequence\\eilenberg-moore-spectral-sequence-I-auxfunctions")
+(load "Kenzo-external-modules\\Eilenberg-Moore-spectral-sequence\\eilenberg-moore-spectral-sequence-I")
 (load "Kenzo-external-modules\\generalized-spectral-sequences\\generalized-spectral-sequences.cl")
 (load "Kenzo-external-modules\\Serre-spectral-systems\\generalized-Serre-ss.cl")
 (load "Kenzo-external-modules\\new-spectral-systems\\spectral-systems")

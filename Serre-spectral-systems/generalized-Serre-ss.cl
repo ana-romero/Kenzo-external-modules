@@ -5,7 +5,7 @@
 
 ;;; FILTRATIONS FOR THE DIFFERENT SPACES
 
-(in-package :user)
+(IN-PACKAGE #:cat)
 
 
 (setf CRPR-FLIN 

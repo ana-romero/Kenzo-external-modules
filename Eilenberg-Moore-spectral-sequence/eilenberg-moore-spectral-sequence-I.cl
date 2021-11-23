@@ -92,37 +92,13 @@
       (add fiber-hat-u-u fiber-hat-left-perturbation))))
 
 
-(DEFUN FIBER-SZCZARBA (fibration
-                       &aux (space (sorc fibration))
-                       (fiber (trgt fibration))
-                       (twisted-crts-prdc (fibration-total fibration))
-                       (ez (ez space fiber))
-                       (fiber-dtau-d (fibration-dtau-d fibration)))
-  (declare
-   (type fibration fibration)
-   (type simplicial-set space  twisted-crts-prdc)
-   (type simplicial-group fiber)
-   (type reduction ez)
-   (type morphism fiber-dtau-d))
-  (the (values reduction morphism)
-    (multiple-value-bind (szczarba bottom-perturbation)
-        (add ez fiber-dtau-d)
-      (with-slots (tcc f g h) szczarba
-        (setf tcc twisted-crts-prdc
-          (slot-value f 'sorc) twisted-crts-prdc
-          (slot-value g 'trgt) twisted-crts-prdc
-          (slot-value h 'sorc) twisted-crts-prdc
-          (slot-value h 'trgt) twisted-crts-prdc))
-      (values szczarba bottom-perturbation))))
-
-
 (DEFUN FIBER-TWISTED-TNSR-PRDC (fibration
-                                &aux (szczarba (fiber-szczarba fibration)))
+                                &aux (brown (brown-reduction fibration)))
   (declare
    (type fibration fibration)
-   (type reduction szczarba))
+   (type reduction brown))
   (the chain-complex
-    (bcc szczarba)))
+    (bcc brown)))
 
 
 (DEFUN FIBER-HAT-RIGHT-PERTURBATION (fibration
@@ -134,10 +110,10 @@
    (type simplicial-set space)
    (type chain-complex cobar fiber-hat-t-u))
   (the morphism
-    (multiple-value-bind (szczarba bottom-perturbation)
-        (fiber-szczarba space)
+    (multiple-value-bind (brown bottom-perturbation)
+        (brown-reduction fibration)
       (declare
-       (ignore szczarba)
+       (ignore brown)
        (type morphism bottom-perturbation))
       (let ((rslt (tnsr-prdc (idnt-mrph cobar) bottom-perturbation)))
         (declare (type morphism rslt))
@@ -354,14 +330,15 @@
          (fiber-dtau-d (fibration-dtau-d fibration)))
     (declare
      (type fibration fibration)
-     (type simplicial-set base ez)
+     (type simplicial-set base)
      (type simplicial-group fiber)
      (type morphism fiber-hat-left-perturbation fiber-dtau-d)
-     (type chain-complex cobar ttp))
+     (type chain-complex cobar ttp)
+     (type reduction ez))
     (setf (slot-value cobar 'efhm) (cobar (efhm base)))
-    (multiple-value-bind (szczarba bottom-perturbation)
+    (multiple-value-bind (rdct bottom-perturbation)
         (add ez fiber-dtau-d)
-      (declare (ignore szczarba)
+      (declare (ignore rdct)
                (type morphism bottom-perturbation))
       (setf (slot-value ttp 'efhm) (add (tnsr-prdc (efhm base) (efhm fiber)) bottom-perturbation)))
      (the homotopy-equivalence
@@ -464,7 +441,7 @@
 (setf fiber-dtau-d (fibration-dtau-d fibration)))
 
 (setf (slot-value cobar 'efhm) (cobar (efhm base)))
-(multiple-value-bind (szczarba bottom-perturbation)
+(multiple-value-bind (rdct bottom-perturbation)
     (add ez fiber-dtau-d)
   
   (setf (slot-value ttp 'efhm) (add (tnsr-prdc (efhm base) (efhm fiber)) bottom-perturbation)))

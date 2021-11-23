@@ -6,6 +6,8 @@
 ;;; GENERALIZED SPECTRAL SEQUENCES FOR FILTERED CHAIN COMPLEXES (LINEAR FILTRATION)
 
 
+(IN-PACKAGE #:cat)
+
 (DEFUN CONTAINS (l e)
   (declare (list l))
   (let ((rslt nil))

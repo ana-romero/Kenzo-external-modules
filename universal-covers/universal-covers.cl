@@ -1,5 +1,81 @@
 (in-package :cat)
 
+;; It is necessary to redefine the following Kenzo function to compute the effective homology of twisted
+;; cartesian product when the fiber is not 0-reduced
+(DEFUN FIBRATION-DTAU-D-INTR
+    (fibration &aux (base (sorc fibration))
+               (bface (face base))
+               (fibre (trgt fibration))
+               (fface (face fibre))
+               (sintr-grml (sintr (grml fibre)))
+               (fbspn (bspn fibre))
+               (sintr-twist (sintr fibration))
+               (total (fibration-total fibration))
+               (total-cmpr (cmpr total)))
+  (declare
+   (type fibration fibration)
+   (type simplicial-set base total)
+   (type face bface fface)
+   (type simplicial-group fibre)
+   (type gmsm fbspn)
+   (type sintr sintr-grml sintr-twist)
+   (type cmprf total-cmpr))
+  (flet ((rslt (dmns crpr
+                     &aux (dmns-1 (1- dmns)))
+               (declare
+                (fixnum dmns dmns-1)
+                (type crpr crpr))
+               (unless (plusp dmns)
+                 (return-from rslt
+                   (zero-cmbn dmns-1)))
+               (with-crpr
+                   (b-absm f-absm) crpr
+                 (let ((tau-b
+                        (tw-a-sintr3 sintr-twist dmns
+                                     b-absm fbspn)))
+                   (declare (type absm tau-b))
+                   ;; The 3 next lines must be commented to deal with the case where the fiber is not 0-reduced
+                   ;;(when (= (dgop tau-b) (mask dmns-1))
+                   ;;   (return-from rslt
+                   ;;   (zero-cmbn dmns-1)))
+                   
+                   (let ((deln-b
+                          (a-face4 bface dmns dmns
+                                   b-absm))
+                         (deln-f
+                          (a-face4 fface dmns dmns
+                                   f-absm)))
+                     (declare
+                      (type absm deln-b deln-f tau-b))
+                     (let ((acrpr1 (2absm-acrpr deln-b deln-f))
+                           (acrpr2
+                            (2absm-acrpr
+                             deln-b
+                             (a-grml4 sintr-grml (1- dmns)
+                                      tau-b deln-f))))
+                       (declare (type absm acrpr1 acrpr2))
+                       (with-absm
+                           (dgop1 crpr1) acrpr1
+                         (with-absm
+                             (dgop2 crpr2) acrpr2
+                           (if (zerop dgop1)
+                               (if (zerop dgop2)
+                                   (dstr-add-term-to-cmbn
+                                    total-cmpr
+                                    (-1-expt-n+1 dmns) crpr1
+                                    (term-cmbn dmns-1
+                                               (-1-expt-n dmns)
+                                               crpr2))
+                                 (term-cmbn dmns-1
+                                            (-1-expt-n+1 dmns)
+                                            crpr1))
+                             (if (zerop dgop2)
+                                 (term-cmbn dmns-1
+                                            (-1-expt-n dmns)
+                                            crpr2)
+                               (zero-cmbn dmns-1)))))))))))
+    (the intr-mrph #'rslt)))
+
 (DEFUN UNIVERSAL-COVER-ABSM-TWOP (smst group twop-edges)
   (declare
    (type simplicial-set smst)
